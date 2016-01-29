@@ -12,7 +12,7 @@ import reducer from './reducers/reducer';
 import { setState } from './actions/action_creators';
 import remoteActionMiddleware from './middlewares/remote_action_middleware';
 
-const socket = io(`${location.protocol}//${location.hostname}:8080`);
+const socket = io.connect('http://localhost:8080');
 
 const createStoreWithMiddleware = applyMiddleware(
     remoteActionMiddleware(socket)
