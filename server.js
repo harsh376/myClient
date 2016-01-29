@@ -1,15 +1,31 @@
+var path = require('path');
+var express = require('express');
 var webpack = require('webpack');
-var WebpackDevServer = require('webpack-dev-server');
-var config = require('./webpack.config');
+var config = require('./webpack.config.dev');
 
-new WebpackDevServer(webpack(config), {
-    publicPath: config.output.publicPath,
-    hot: true,
-    historyApiFallback: true
-}).listen(3000, 'localhost', function(err, result) {
+var isDeveloping = process.env.NODE_ENV !== 'production';
+var port = isDeveloping ? 3000 : process.env.PORT;
+var app = express();
+
+if (isDeveloping) {
+    var compiler = webpack(config);
+    var middleware = require('webpack-dev-middleware')(compiler, {
+        publicPath: config.output.publicPath,
+        noInfo: true
+    });
+
+    app.use(middleware);
+    app.use(require('webpack-hot-middleware')(compiler));
+    app.get('*', function response(req, res) {
+        res.sendFile(path.join(__dirname, 'index.html'));
+    });
+} else {
+    // PRODUCTION
+}
+
+app.listen(port, '0.0.0.0', function(err) {
     if (err) {
         console.log(err);
     }
-
-    console.log('Listening at localhost:3000');
+    console.info('Listening at http://0.0.0.0:%s/', port);
 });
