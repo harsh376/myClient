@@ -8,6 +8,7 @@ var port = isDeveloping ? 3000 : process.env.PORT;
 var app = express();
 
 if (isDeveloping) {
+    console.log('DEVELOPMENT');
     var compiler = webpack(config);
     var middleware = require('webpack-dev-middleware')(compiler, {
         publicPath: config.output.publicPath,
@@ -17,10 +18,11 @@ if (isDeveloping) {
     app.use(middleware);
     app.use(require('webpack-hot-middleware')(compiler));
     app.get('*', function response(req, res) {
-        res.sendFile(path.join(__dirname, 'index.html'));
+        res.sendFile(path.join(__dirname, './dist/index.html'));
     });
 } else {
-    // PRODUCTION
+    console.log('PRODUCTION');
+    app.use(express.static(path.join(__dirname, 'dist')));
 }
 
 app.listen(port, '0.0.0.0', function(err) {

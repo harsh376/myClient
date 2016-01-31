@@ -11,5 +11,11 @@ RUN npm install
 # Bundle app source
 COPY . /usr/src/app
 
-EXPOSE 3000
-CMD [ "npm", "start" ]
+# Default Environment variables
+ENV NODE_ENV=production
+ENV PORT=4000
+
+# dev: 3000, prod: 4000
+EXPOSE 3000 4000
+
+CMD [ "npm", "run", "deploy" ]
