@@ -12,7 +12,8 @@ import reducer from './reducers/reducer';
 import { setState } from './actions/action_creators';
 import remoteActionMiddleware from './middlewares/remote_action_middleware';
 
-const socket = io.connect('http://localhost:8080');
+const addr = process.env.SERVER_ADDR ? process.env.SERVER_ADDR : 'http://localhost:8080';
+const socket = io.connect(addr);
 
 const createStoreWithMiddleware = applyMiddleware(
     remoteActionMiddleware(socket)
